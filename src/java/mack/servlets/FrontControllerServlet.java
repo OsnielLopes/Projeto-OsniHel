@@ -27,13 +27,25 @@ public class FrontControllerServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             String controller = request.getParameter("control");
-            //TODO: verificar se o controller requerido é o de criacao, se sim encaminhar para o form.html
-            //TODO: verificar se o controller requerido é o de update, se sim encaminhar para o update.html
-            Controller control = ControllerFactory.getControllerByFullClassName(controller);
-            control.init(request);
-            control.execute();
+            String returnPage;
+            switch(controller){
+                case "novaContaForm":
+                    returnPage = "/novaContaForm.html";
+                    break;
+                case "atualizaContaForm":
+                    returnPage = "/atualizaContaForm.html";
+                    break;
+                case "apagarContaForm":
+                    returnPage = "/apagarContaForm.html";
+                    break;
+                default:
+                    Controller control = ControllerFactory.getControllerByFullClassName(controller);
+                    control.init(request);
+                    control.execute();
+                    returnPage = control.getReturnPage();
+            }
             RequestDispatcher requestDispatcher
-                    = getServletContext().getRequestDispatcher(control.getReturnPage());
+                    = getServletContext().getRequestDispatcher(returnPage);
             requestDispatcher.forward(request, response);
         } catch (IOException | ServletException e) {
             out.println(e.getMessage());

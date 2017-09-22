@@ -9,7 +9,7 @@ Created on : 07/04/2014, 20:49:49
 <html>
     <head>
         <meta http-equiv="Content-Type"
-              content="text/html; charset=UTF-8"> <title>JSP Page</title>
+              content="text/html; charset=UTF-8"> <title>Todas as contas</title>
     </head>
     <body>
         <h1>Contas</h1> 
@@ -24,5 +24,7 @@ Created on : 07/04/2014, 20:49:49
                 <%}%>
         </table>
         <%}%>
+        <br>
+        <a href="/Projeto-OsniHel/index.html">Voltar ao menu</a>
     </body>
 </html>

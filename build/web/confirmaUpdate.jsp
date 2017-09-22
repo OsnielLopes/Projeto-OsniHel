@@ -9,11 +9,23 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        //TODO: Verificar se a conta foi atualizada com sucesso
-        //TODO: Colocar link pra voltar pra pagina inicial
-        <title>JSP Page</title>
+        <title>Atualiza Conta</title>
+        <% int situacao = (Integer) request.getAttribute("situacao"); %>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        
+        <% if (situacao == 0) { %>
+        <p>Não foi possível atualizar esta conta pois o número fornecido não coincide o de nenhuma existente.</p>
+        <%
+        } else {
+            if (situacao != 1) { %>
+        <p>Não foi possível atualizar a conta. Erro: <% out.println(situacao); %></p>
+        <% } else {%>
+
+        <p>Conta atualizada com sucesso!</p>
+        <%}
+            }%>
+        <br>
+        <a href="/Projeto-OsniHel/index.html">Voltar ao menu</a>
     </body>
 </html>

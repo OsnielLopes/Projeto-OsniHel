@@ -9,102 +9,35 @@ import dao.BancoDaoException;
 import dao.ConexaoException;
 import dao.ConexaoInterface;
 import dao.ConexaoJavaDb;
-import dao.Conta;
 import dao.ContaDaoRelacional;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import mack.controllers.AbstractController;
 
 /**
  *
  * @author osniellopesteixeira
  */
-public class DeleteController extends HttpServlet {
+public class DeleteController extends AbstractController {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ConexaoException, BancoDaoException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            Long conta = (Long) request.getAttribute("num_conta");
-
-            ConexaoInterface conexao = new ConexaoJavaDb("localhost",1527,"app","123","sistema_bancario");
-            ContaDaoRelacional contaDaoRelacional = new ContaDaoRelacional(conexao);
-            
-            int apagar = contaDaoRelacional.apagar(conta);
-            
-            request.setAttribute("situacao", apagar);
-            
-            RequestDispatcher requestDispatcher
-                    = getServletContext().getRequestDispatcher("confirmaDelete.jsp");
-            requestDispatcher.forward(request, response);
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void execute() {
+        HttpServletRequest request = this.getRequest();
+
+        Long conta = Long.parseLong((String) request.getParameter("conta"));
+
+        ConexaoInterface conexao = new ConexaoJavaDb("localhost", 1527, "app", "123", "sistema_bancario");
+        ContaDaoRelacional contaDaoRelacional;
+        int apagar = -1;
         try {
-            processRequest(request, response);
-        } catch (ConexaoException ex) {
-            Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BancoDaoException ex) {
-            Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ConexaoException ex) {
-            Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BancoDaoException ex) {
+            contaDaoRelacional = new ContaDaoRelacional(conexao);
+            apagar = contaDaoRelacional.apagar(conta);
+        } catch (ConexaoException | BancoDaoException ex) {
             Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        request.setAttribute("situacao", apagar);
+        this.setReturnPage("/confirmaDelete.jsp");
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

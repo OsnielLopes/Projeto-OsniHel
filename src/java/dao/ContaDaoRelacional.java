@@ -66,7 +66,7 @@ public class ContaDaoRelacional implements ContaDaoInterface {
             ret = stmInserir.executeUpdate();
         } catch (SQLException ex) {
             out.println(ex.getMessage());
-            throw new BancoDaoException("Erro na operação de inserir nova conta!");
+            throw new BancoDaoException("Erro na operação de inserir nova conta!", ex.getErrorCode());
         }
         return ret;
     }
