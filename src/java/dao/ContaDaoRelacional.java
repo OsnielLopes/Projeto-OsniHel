@@ -11,6 +11,7 @@ import static java.lang.System.*;
 public class ContaDaoRelacional implements ContaDaoInterface {
     
     private PreparedStatement stmObterTodos;
+    private PreparedStatement stmObter;
     private PreparedStatement stmInserir;
     private PreparedStatement stmApagar;
     private PreparedStatement stmAtualizar;
@@ -21,6 +22,8 @@ public class ContaDaoRelacional implements ContaDaoInterface {
         try {
             sql = "SELECT nro_conta, saldo FROM contas";
             stmObterTodos = connection.prepareStatement(sql);
+            sql = "SELECT nro_conta, saldo FROM contas WHERE nro_conta = ?";
+            stmObter = connection.prepareStatement(sql);
             sql = "INSERT INTO contas VALUES (?,?)";
             stmInserir = connection.prepareStatement(sql);
             sql = "DELETE FROM contas WHERE nro_conta=?";
@@ -85,5 +88,20 @@ public class ContaDaoRelacional implements ContaDaoInterface {
             throw new BancoDaoException("Erro ao executar consulta de todas as contas");
         }
         return contas;
+    }
+
+    public Conta buscar(Long conta) throws BancoDaoException {
+        Conta c = new Conta();
+        try {
+            stmObter.setLong(1,conta);
+            ResultSet resultado = stmObter.executeQuery();
+            if(resultado.next()){
+                c = new Conta(conta,resultado.getBigDecimal("saldo"));
+            }
+        } catch (SQLException ex) {
+            out.println(ex.getMessage());
+            throw new BancoDaoException("Erro na operação de inserir nova conta!", ex.getErrorCode());
+        }
+        return c;
     }
 }

@@ -28,7 +28,7 @@ public class FrontControllerServlet extends HttpServlet {
         try {
             String controller = request.getParameter("control");
             String returnPage;
-            switch(controller){
+            switch (controller) {
                 case "novaContaForm":
                     returnPage = "/novaContaForm.html";
                     break;
@@ -38,6 +38,10 @@ public class FrontControllerServlet extends HttpServlet {
                 case "apagarContaForm":
                     returnPage = "/apagarContaForm.html";
                     break;
+                case "buscarContaForm":
+                    returnPage = "/buscarContaForm.html";
+                    break;
+
                 default:
                     Controller control = ControllerFactory.getControllerByFullClassName(controller);
                     control.init(request);

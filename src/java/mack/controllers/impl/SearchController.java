@@ -11,42 +11,32 @@ import dao.ConexaoInterface;
 import dao.ConexaoJavaDb;
 import dao.Conta;
 import dao.ContaDaoRelacional;
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import mack.controllers.AbstractController;
 
-/**
- *
- * @author osniellopesteixeira
- */
-public class UpdateController extends AbstractController {
+public class SearchController extends AbstractController{
 
     @Override
     public void execute() {
         HttpServletRequest request = this.getRequest();
-        String sSaldo = (String) request.getParameter("saldo");
-        sSaldo = sSaldo.replaceAll(",", ".");
-        Long conta = Long.parseLong(request.getParameter("conta"));
-        BigDecimal saldo = new BigDecimal(sSaldo);
+
+        Long conta = Long.parseLong((String) request.getParameter("conta"));
 
         ConexaoInterface conexao = new ConexaoJavaDb("localhost", 1527, "app", "123", "sistema_bancario");
         ContaDaoRelacional contaDaoRelacional;
-        
-        int situacao = -1;
+        Conta c = new Conta();
         try {
             contaDaoRelacional = new ContaDaoRelacional(conexao);
-            Conta novaConta = new Conta(conta, saldo);
-            situacao = contaDaoRelacional.atualizar(novaConta);
+            c = contaDaoRelacional.buscar(conta);
         } catch (ConexaoException | BancoDaoException ex) {
-            Logger.getLogger(UpdateController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DeleteController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        request.setAttribute("situacao", situacao);
-        this.setReturnPage("/confirmaUpdate.jsp");
+        request.setAttribute("conta", String.valueOf(c.getNumero()));
+        request.setAttribute("saldo", String.valueOf(c.getSaldo()));
         
+        this.setReturnPage("/confirmaBusca.jsp");
     }
-
+    
 }

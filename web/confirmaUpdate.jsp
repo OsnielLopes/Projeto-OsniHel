@@ -15,7 +15,7 @@
     <body>
         
         <% if (situacao == 0) { %>
-        <p>Não foi possível atualizar esta conta pois o número fornecido não coincide o de nenhuma existente.</p>
+        <p>Não foi possível atualizar esta conta pois o número fornecido não coincide com o de nenhuma existente.</p>
         <%
         } else {
             if (situacao != 1) { %>
